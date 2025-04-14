@@ -92,6 +92,7 @@ def create_jvm_test_suite(
     tests = []
 
     # Optimization for classpath, reduces the duplicate dependencies for each test to instead rely on one target
+    filtered_library_attrs = {key: value for key, value in library_attrs.items() if key in ["data"]}
     deps_lib_name = "%s-test-deps-lib" % name
     define_library(
         name = deps_lib_name,
@@ -99,7 +100,7 @@ def create_jvm_test_suite(
         visibility = ["//visibility:private"],
         tags = tags,
         testonly = True,
-        **library_attrs
+        **filtered_library_attrs
     )
     runtime_deps_lib_name = "%s-test-runtime-deps-lib" % name
     define_library(
@@ -108,7 +109,7 @@ def create_jvm_test_suite(
         visibility = ["//visibility:private"],
         tags = tags,
         testonly = True,
-        **library_attrs
+        **filtered_library_attrs
     )
 
     for src in test_srcs:
